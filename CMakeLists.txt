@@ -39,7 +39,7 @@ generate_messages(
         sensor_msgs
 )
 
-find_package(PCL 1.7 REQUIRED)
+find_package(PCL REQUIRED)
 find_package(Boost 1.54 REQUIRED)
 find_package(OpenMP)
 if (OPENMP_FOUND)
