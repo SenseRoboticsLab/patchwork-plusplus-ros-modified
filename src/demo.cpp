@@ -61,7 +61,7 @@ void callbackCloud(const sensor_msgs::PointCloud2::Ptr &cloud_msg) {
         pt.x = point.x;
         pt.y = point.y;
         pt.z = point.z;
-        pt.label = 0;
+        pt.intensity = 0;
         pc_curr.points.push_back(pt);
     }
 
