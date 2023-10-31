@@ -50,29 +50,30 @@ sensor_msgs::PointCloud2 cloud2msg(pcl::PointCloud<T> cloud, const ros::Time &st
 void callbackCloud(const sensor_msgs::PointCloud2::Ptr &cloud_msg) {
     double time_taken;
 
-    pcl::PointCloud<pcl::PointXYZI> cloud_in;
-    pcl::PointCloud<PointType> pc_curr;
+    pcl::PointCloud<PointType> cloud_in;
+    // pcl::PointCloud<PointType> pc_curr;
     pcl::PointCloud<PointType> pc_ground;
     pcl::PointCloud<PointType> pc_non_ground;
 
     pcl::fromROSMsg(*cloud_msg, cloud_in);
-    for (const auto &point : cloud_in.points) {
-        PointType pt;
-        pt.x = point.x;
-        pt.y = point.y;
-        pt.z = point.z;
-        pt.intensity = 0;
-        pc_curr.points.push_back(pt);
-    }
+    // for (auto &point : cloud_in.points) {
+    // PointType pt;
+    // pt.x = point.x;
+    // pt.y = point.y;
+    // pt.z = point.z;
+    // point.intensity = 0;
+    // pt.label = point.label;
+    // pc_curr.points.push_back(pt);
+    // }
 
-    PatchworkppGroundSeg->estimate_ground(pc_curr, pc_ground, pc_non_ground, time_taken);
+    PatchworkppGroundSeg->estimate_ground(cloud_in, pc_ground, pc_non_ground, time_taken);
 
     ROS_INFO_STREAM("\033[1;32m"
-                    << "Input PointCloud: " << pc_curr.size() << " -> Ground: " << pc_ground.size()
+                    << "Input PointCloud: " << cloud_in.size() << " -> Ground: " << pc_ground.size()
                     << "/ NonGround: " << pc_non_ground.size() << " (running_time: " << time_taken << " sec)"
                     << "\033[0m");
 
-    pub_cloud.publish(cloud2msg(pc_curr, cloud_msg->header.stamp, cloud_msg->header.frame_id));
+    pub_cloud.publish(cloud2msg(cloud_in, cloud_msg->header.stamp, cloud_msg->header.frame_id));
     pub_ground.publish(cloud2msg(pc_ground, cloud_msg->header.stamp, cloud_msg->header.frame_id));
     pub_non_ground.publish(cloud2msg(pc_non_ground, cloud_msg->header.stamp, cloud_msg->header.frame_id));
 }
