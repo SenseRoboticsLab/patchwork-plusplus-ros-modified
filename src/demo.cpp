@@ -69,7 +69,7 @@ void callbackCloud(const sensor_msgs::PointCloud2::Ptr &cloud_msg) {
     PatchworkppGroundSeg->estimate_ground(cloud_in, pc_ground, pc_non_ground, time_taken);
 
     ROS_INFO_STREAM("\033[1;32m"
-                    << "Input PointCloud: " << cloud_in.size() << " -> Ground: " << pc_ground.size()
+                    <<"Label: " << cloud_in[0].label << " Input PointCloud: " << cloud_in.size() << " -> Ground: " << pc_ground.size()
                     << "/ NonGround: " << pc_non_ground.size() << " (running_time: " << time_taken << " sec)"
                     << "\033[0m");
 
@@ -90,11 +90,11 @@ int main(int argc, char **argv) {
     cout << "Operating patchwork++..." << endl;
     PatchworkppGroundSeg.reset(new PatchWorkpp<PointType>(&pnh));
 
-    pub_cloud = pnh.advertise<sensor_msgs::PointCloud2>("cloud", 100, true);
-    pub_ground = pnh.advertise<sensor_msgs::PointCloud2>("/travel/ground_pc", 100, true);
-    pub_non_ground = pnh.advertise<sensor_msgs::PointCloud2>("/travel/nonground_pc", 100, true);
+    pub_cloud = pnh.advertise<sensor_msgs::PointCloud2>("cloud", 10, true);
+    pub_ground = pnh.advertise<sensor_msgs::PointCloud2>("/travel/ground_pc", 10, true);
+    pub_non_ground = pnh.advertise<sensor_msgs::PointCloud2>("/travel/nonground_pc", 10, true);
 
-    ros::Subscriber sub_cloud = nh.subscribe(cloud_topic, 100, callbackCloud);
+    ros::Subscriber sub_cloud = nh.subscribe(cloud_topic, 1000, callbackCloud);
 
     ros::spin();
 
