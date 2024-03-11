@@ -91,8 +91,8 @@ int main(int argc, char **argv) {
     PatchworkppGroundSeg.reset(new PatchWorkpp<PointType>(&pnh));
 
     pub_cloud = pnh.advertise<sensor_msgs::PointCloud2>("cloud", 10, true);
-    pub_ground = pnh.advertise<sensor_msgs::PointCloud2>("/travel/ground_pc", 10, true);
-    pub_non_ground = pnh.advertise<sensor_msgs::PointCloud2>("/travel/nonground_pc", 10, true);
+    pub_ground = pnh.advertise<sensor_msgs::PointCloud2>("/patchworkpp/ground_pc", 10, true);
+    pub_non_ground = pnh.advertise<sensor_msgs::PointCloud2>("/patchworkpp/nonground_pc", 10, true);
 
     ros::Subscriber sub_cloud = nh.subscribe(cloud_topic, 1000, callbackCloud);
 
