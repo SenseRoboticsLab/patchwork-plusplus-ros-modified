@@ -11,7 +11,7 @@
 
 
     <!-- <node name="travel_kitti_publisher" pkg="travel" type="travel_kitti_publisher" output="screen"/> -->
-    <node name="travel_kitti_publisher_scan_line" pkg="travel" type="travel_kitti_publisher_scan_line" output="screen"/>
+    <node name="kitti_publisher_scan_line" pkg="patchworkpp" type="kitti_publisher_scan_line" output="screen"/>
 
 
     <include file="$(find patchworkpp)/launch/demo.launch"/>

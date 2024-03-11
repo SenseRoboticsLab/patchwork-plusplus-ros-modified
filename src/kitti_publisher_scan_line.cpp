@@ -56,7 +56,7 @@ int main(int argc, char **argv) {
   int scan_line;
   ros::NodeHandle nh;
   std::string node_topic;
-  nh.param<string>("/node_topic", node_topic, "/node");
+  nh.param<string>("/node_topic", node_topic, "/kitti_cloud");
   nh.param<string>("/data_dir", data_dir,
                    "/mnt/gpuServerFolder/media/pro/Seagate Portable "
                    "Drive/DataSets/kitti/data_odometry_velodyne/sequences");
