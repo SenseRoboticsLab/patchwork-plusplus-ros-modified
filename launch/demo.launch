@@ -1,12 +1,12 @@
 <launch>
 
-  <arg name="cloud_topic" default="/kitti_cloud"/>
+  <arg name="cloud_topic" default="/os1_cloud_node/points"/>
 
   <node name="ground_segmentation" pkg="patchworkpp" type="demo" output="screen">
     <rosparam command="load" file="$(find patchworkpp)/config/params.yaml" />
     <param name="cloud_topic" type="string" value="$(arg cloud_topic)"/>
   </node>
-
-  <!-- <node name="$(anon rviz)" pkg="rviz" type="rviz" args="-d $(find patchworkpp)/rviz/demo.rviz"/> -->
+  <node name="rivz_mapping" pkg="rviz" type="rviz" args="-d $(find curl_slam)/rviz/rviz_mapping.rviz"/>
+<!--   <node name="$(anon rviz)" pkg="rviz" type="rviz" args="-d $(find patchworkpp)/rviz/demo.rviz"/> -->
 
 </launch>

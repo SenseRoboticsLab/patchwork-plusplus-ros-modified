@@ -73,9 +73,9 @@ void callbackCloud(const sensor_msgs::PointCloud2::Ptr &cloud_msg) {
                     << "/ NonGround: " << pc_non_ground.size() << " (running_time: " << time_taken << " sec)"
                     << "\033[0m");
 
-    pub_cloud.publish(cloud2msg(cloud_in, cloud_msg->header.stamp, cloud_msg->header.frame_id));
-    pub_ground.publish(cloud2msg(pc_ground, cloud_msg->header.stamp, cloud_msg->header.frame_id));
-    pub_non_ground.publish(cloud2msg(pc_non_ground, cloud_msg->header.stamp, cloud_msg->header.frame_id));
+    pub_cloud.publish(cloud2msg(cloud_in, cloud_msg->header.stamp ));
+    pub_ground.publish(cloud2msg(pc_ground, cloud_msg->header.stamp));
+    pub_non_ground.publish(cloud2msg(pc_non_ground, cloud_msg->header.stamp));
 }
 
 int main(int argc, char **argv) {
