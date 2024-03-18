@@ -4,8 +4,8 @@
 
 // For disable PCL complile lib, to use PointXYZILID
 #define PCL_NO_PRECOMPILE
-#include "tools/kitti_loader.hpp"
 #include "patchworkpp/utils.hpp"
+#include "tools/kitti_loader.hpp"
 #include <chrono>
 #include <pcl_conversions/pcl_conversions.h>
 #include <ros/ros.h>
@@ -56,7 +56,7 @@ int main(int argc, char **argv) {
   int scan_line;
   ros::NodeHandle nh;
   std::string node_topic;
-  nh.param<string>("/node_topic", node_topic, "/kitti_cloud");
+  nh.param<string>("/kitti_topic", node_topic, "/kitti_cloud");
   nh.param<string>("/data_dir", data_dir,
                    "/mnt/gpuServerFolder/media/pro/Seagate Portable "
                    "Drive/DataSets/kitti/data_odometry_velodyne/sequences");
