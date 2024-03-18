@@ -38,6 +38,17 @@ ros::Publisher pub_cloud;
 ros::Publisher pub_ground;
 ros::Publisher pub_non_ground;
 
+
+
+bool has_field(const sensor_msgs::PointCloud2& cloud, const std::string& field_name) {
+    for (const auto& field : cloud.fields) {
+        if (field.name == field_name) {
+            return true;
+        }
+    }
+    return false;
+}
+
 template <typename T>
 sensor_msgs::PointCloud2 cloud2msg(pcl::PointCloud<T> cloud, const ros::Time &stamp, std::string frame_id = "map") {
     sensor_msgs::PointCloud2 cloud_ROS;
@@ -46,6 +57,8 @@ sensor_msgs::PointCloud2 cloud2msg(pcl::PointCloud<T> cloud, const ros::Time &st
     cloud_ROS.header.frame_id = frame_id;
     return cloud_ROS;
 }
+
+int frame_idx = 0;
 
 void callbackCloud(const sensor_msgs::PointCloud2::Ptr &cloud_msg) {
     double time_taken;
@@ -56,6 +69,13 @@ void callbackCloud(const sensor_msgs::PointCloud2::Ptr &cloud_msg) {
     pcl::PointCloud<PointType> pc_non_ground;
 
     pcl::fromROSMsg(*cloud_msg, cloud_in);
+
+    if(!has_field(*cloud_msg, "label")){
+        for( auto &point : cloud_in.points){
+            point.label = frame_idx;
+        }
+        ++frame_idx;
+    }
     // for (auto &point : cloud_in.points) {
     // PointType pt;
     // pt.x = point.x;
