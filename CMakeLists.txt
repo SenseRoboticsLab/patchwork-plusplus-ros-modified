@@ -15,6 +15,11 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+set(CMAKE_PREFIX_PATH "/home/zkc/Application/eigen-3.4.0/installation" ${CMAKE_PREFIX_PATH})
+set(Eigen3_DIR "/home/zkc/Application/eigen-3.4.0/installation/share/eigen3/cmake")
+find_package(Eigen3 REQUIRED 3.4.0)
+include_directories(${EIGEN3_INCLUDE_DIR})
+
 find_package(catkin REQUIRED COMPONENTS
         roscpp
         rospy
