@@ -70,6 +70,10 @@ add_executable(demo src/demo.cpp)
 target_link_libraries(demo ${catkin_LIBRARIES} ${PCL_LIBRARIES} ${OpenCV_LIBRARIES})
 add_dependencies(demo patchworkpp_generate_messages_cpp)
 
+add_executable(demo_newer_college src/demo_newer_college.cpp)
+target_link_libraries(demo_newer_college ${catkin_LIBRARIES} ${PCL_LIBRARIES} ${OpenCV_LIBRARIES})
+add_dependencies(demo_newer_college patchworkpp_generate_messages_cpp)
+
 add_executable(kitti_publisher_scan_line src/kitti_publisher_scan_line.cpp)
 target_link_libraries(kitti_publisher_scan_line ${catkin_LIBRARIES} ${PCL_LIBRARIES})
 add_dependencies(kitti_publisher_scan_line patchworkpp_generate_messages_cpp)

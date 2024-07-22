@@ -12,22 +12,19 @@
 #include <sensor_msgs/PointCloud2.h>
 #include <thread>
 
-struct PointXYZILID_patchwork {
-  PCL_ADD_POINT4D; // quad-word XYZ
-  float intensity; ///< laser intensity reading
-  uint16_t label;  ///< point label
-  uint16_t id;
-  EIGEN_MAKE_ALIGNED_OPERATOR_NEW // ensure proper alignment
+struct PointXYZITL {
+    PCL_ADD_POINT4D; // quad-word XYZ
+    float intensity; ///< laser intensity reading
+    uint32_t t;
+    uint16_t label;                 ///< point label
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW // ensure proper alignment
 };
 
 // Register custom point struct according to PCL
-POINT_CLOUD_REGISTER_POINT_STRUCT(
-    PointXYZILID_patchwork,
-    (float, x, x)(float, y, y)(float, z, z)(float, intensity,
-                                            intensity)(uint16_t, label,
-                                                       label)(uint16_t, id, id))
+POINT_CLOUD_REGISTER_POINT_STRUCT(PointXYZITL, (float, x, x)(float, y, y)(float, z, z)(float, intensity, intensity)(
+                                                   std::uint32_t, t, t)(uint16_t, label, label))
 
-using PointType = PointXYZILID_patchwork;
+using PointType = PointXYZITL;
 using namespace std;
 
 ros::Publisher NodePublisher;

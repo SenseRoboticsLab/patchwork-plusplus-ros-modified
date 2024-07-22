@@ -15,17 +15,51 @@
 #include <sensor_msgs/PointCloud2.h>
 #include <signal.h>
 
+namespace ouster_ros {
+
+struct EIGEN_ALIGN16 Point {
+    PCL_ADD_POINT4D;
+    float intensity;
+    uint32_t t;
+    uint16_t reflectivity;
+    uint8_t ring;
+    uint16_t ambient;
+    uint32_t range;
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+};
+} // namespace ouster_ros
+
+// clang-format off
+POINT_CLOUD_REGISTER_POINT_STRUCT(ouster_ros::Point,
+    (float, x, x)
+    (float, y, y)
+    (float, z, z)
+    (float, intensity, intensity)
+    // use std::uint32_t to avoid conflicting with pcl::uint32_t
+    (std::uint32_t, t, t)
+    (std::uint16_t, reflectivity, reflectivity)
+    (std::uint8_t, ring, ring)
+    (std::uint16_t, ambient, ambient)
+    (std::uint32_t, range, range)
+)
+
 struct PointXYZITL {
     PCL_ADD_POINT4D; // quad-word XYZ
     float intensity; ///< laser intensity reading
     uint32_t t;
-    uint16_t label;                 ///< point label
+    uint16_t label;  ///< point label    
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW // ensure proper alignment
 };
 
 // Register custom point struct according to PCL
-POINT_CLOUD_REGISTER_POINT_STRUCT(PointXYZITL, (float, x, x)(float, y, y)(float, z, z)(float, intensity, intensity)(
-                                                   std::uint32_t, t, t)(uint16_t, label, label))
+POINT_CLOUD_REGISTER_POINT_STRUCT(PointXYZITL,
+    (float, x, x)
+    (float, y, y)
+    (float, z, z)
+    (float, intensity, intensity)
+    (std::uint32_t, t, t)
+    (uint16_t, label, label)
+)
 using PointType = PointXYZITL;
 // using PointType = ouster_ros::Point;
 
@@ -37,8 +71,10 @@ ros::Publisher pub_cloud;
 ros::Publisher pub_ground;
 ros::Publisher pub_non_ground;
 
-bool has_field(const sensor_msgs::PointCloud2 &cloud, const std::string &field_name) {
-    for (const auto &field : cloud.fields) {
+
+
+bool has_field(const sensor_msgs::PointCloud2& cloud, const std::string& field_name) {
+    for (const auto& field : cloud.fields) {
         if (field.name == field_name) {
             return true;
         }
@@ -60,17 +96,25 @@ int frame_idx = 0;
 void callbackCloud(const sensor_msgs::PointCloud2::Ptr &cloud_msg) {
     double time_taken;
 
+    pcl::PointCloud<ouster_ros::Point> cloud_in_ouster;
     pcl::PointCloud<PointType> cloud_in;
     // pcl::PointCloud<PointType> pc_curr;
     pcl::PointCloud<PointType> pc_ground;
     pcl::PointCloud<PointType> pc_non_ground;
 
-    pcl::fromROSMsg(*cloud_msg, cloud_in);
+    pcl::fromROSMsg(*cloud_msg, cloud_in_ouster);
 
-    for (auto &point : cloud_in.points) {
-        point.label = frame_idx;
+    for(const auto &point:cloud_in_ouster.points){
+        PointType pt;
+        pt.x = point.x;
+        pt.y = point.y;
+        pt.z = point.z;
+        pt.intensity = point.intensity;
+        pt.t = point.t;
+        pt.label = frame_idx;
+        cloud_in.push_back(pt);
     }
-    ++frame_idx;
+    ++frame_idx;    
     // for (auto &point : cloud_in.points) {
     // PointType pt;
     // pt.x = point.x;
@@ -84,12 +128,11 @@ void callbackCloud(const sensor_msgs::PointCloud2::Ptr &cloud_msg) {
     PatchworkppGroundSeg->estimate_ground(cloud_in, pc_ground, pc_non_ground, time_taken);
 
     ROS_INFO_STREAM("\033[1;32m"
-                    << "Label: " << cloud_in[0].label << " Input PointCloud: " << cloud_in.size()
-                    << " -> Ground: " << pc_ground.size() << "/ NonGround: " << pc_non_ground.size()
-                    << " (running_time: " << time_taken << " sec)"
+                    <<"Label: " << cloud_in[0].label << " Input PointCloud: " << cloud_in.size() << " -> Ground: " << pc_ground.size()
+                    << "/ NonGround: " << pc_non_ground.size() << " (running_time: " << time_taken << " sec)"
                     << "\033[0m");
 
-    pub_cloud.publish(cloud2msg(cloud_in, cloud_msg->header.stamp));
+    pub_cloud.publish(cloud2msg(cloud_in, cloud_msg->header.stamp ));
     pub_ground.publish(cloud2msg(pc_ground, cloud_msg->header.stamp));
     pub_non_ground.publish(cloud2msg(pc_non_ground, cloud_msg->header.stamp));
 }
