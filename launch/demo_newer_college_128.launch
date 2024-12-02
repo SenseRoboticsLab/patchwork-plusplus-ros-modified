@@ -9,7 +9,7 @@
 
   <!--   <node name="$(anon rviz)" pkg="rviz" type="rviz" args="-d $(find
   patchworkpp)/rviz/demo_newer_college.rviz"/> -->
-  <node name="rivz_mapping" pkg="rviz" type="rviz"
-    args="-d $(find curl_slam)/rviz/rviz_mapping.rviz" />
+  <!-- <node name="rivz_mapping" pkg="rviz" type="rviz"
+    args="-d $(find curl_slam)/rviz/rviz_mapping.rviz" /> -->
 
 </launch>
